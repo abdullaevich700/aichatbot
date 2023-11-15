@@ -4,10 +4,10 @@ from telegram import ForceReply, Update, Location
 from telegram.ext import Application, CommandHandler, ContextTypes, MessageHandler, filters
 from geopy.geocoders import Nominatim
 import requests
-import os
+from decouple import config
 
-openai.api_key = os.environ.get('openai.api_key')
-openweathermap_api_key = os.environ.get('openweathermap_api_key')
+openai.api_key = config('openai.api_key')
+openweathermap_api_key = config('openweathermap_api_key')
 
 geolocator = Nominatim(user_agent="Bot govt")
 
@@ -50,7 +50,7 @@ async def echo(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
 
 def main() -> None:
     logging.basicConfig(format="%(asctime)s - %(name)s - %(levelname)s - %(message)s", level=logging.INFO)
-    application = Application.builder().token(os.environ.get('bot_token')).build()
+    application = Application.builder().token(config('bot_token')).build()
 
     application.add_handler(CommandHandler("start", start))
     application.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, echo))
